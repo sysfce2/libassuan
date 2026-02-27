@@ -131,6 +131,77 @@ LT_PREREQ([2.2.6])
 LT_INIT([win32-dll disable-static])
 LT_LANG([Windows Resource])
 
+#
+# Setup gcc specific options
+#
+AC_MSG_NOTICE([checking for cc features])
+if test "$GCC" = yes; then
+    # Check whether gcc does not emit a diagnostic for unknown -Wno-*
+    # options.  This is the case for gcc >= 4.6
+    AC_MSG_CHECKING([if gcc ignores unknown -Wno-* options])
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+#if __GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6 )
+#kickerror
+#endif]],[])],[_gcc_silent_wno=yes],[_gcc_silent_wno=no])
+    AC_MSG_RESULT($_gcc_silent_wno)
+
+    # Note that it is okay to use CFLAGS here because these are just
+    # warning options and the user should have a chance of overriding
+    # them.
+    if test "$USE_MAINTAINER_MODE" = "yes"; then
+        M_CFLAGS="-O3 -Wall -Wcast-align -Wshadow -Wstrict-prototypes"
+        M_CFLAGS="$M_CFLAGS -Wformat -Wno-format-y2k -Wformat-security"
+        if test x"$_gcc_silent_wno" = xyes ; then
+          _gcc_wopt=yes
+        else
+          AC_MSG_CHECKING([if gcc supports -Wno-missing-field-initializers])
+          _gcc_cflags_save=$CFLAGS
+          CFLAGS="-Wno-missing-field-initializers"
+          AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],
+                            [_gcc_wopt=yes],[_gcc_wopt=no])
+          AC_MSG_RESULT($_gcc_wopt)
+          CFLAGS=$_gcc_cflags_save;
+        fi
+        if test x"$_gcc_wopt" = xyes ; then
+          M_CFLAGS="$M_CFLAGS -W -Wno-sign-compare -Wno-missing-field-initializers"
+        fi
+
+        AC_MSG_CHECKING([if gcc supports -Wdeclaration-after-statement])
+        _gcc_cflags_save=$CFLAGS
+        CFLAGS="-Wdeclaration-after-statement"
+        AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],_gcc_wopt=yes,_gcc_wopt=no)
+        AC_MSG_RESULT($_gcc_wopt)
+        CFLAGS=$_gcc_cflags_save;
+        if test x"$_gcc_wopt" = xyes ; then
+          M_CFLAGS="$M_CFLAGS -Wdeclaration-after-statement"
+        fi
+
+	# Prepend the maintainer-cflags so that the user can override
+	# them, e.g. to override the optimization flags for debugging.
+	CFLAGS="$M_CFLAGS $CFLAGS"
+    else
+        CFLAGS="$CFLAGS -Wall"
+    fi
+
+    AC_MSG_CHECKING([if gcc supports -Wpointer-arith])
+    _gcc_cflags_save=$CFLAGS
+    CFLAGS="-Wpointer-arith"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([],[])],_gcc_psign=yes,_gcc_psign=no)
+    AC_MSG_RESULT($_gcc_psign)
+    CFLAGS=$_gcc_cflags_save;
+    if test x"$_gcc_psign" = xyes ; then
+       CFLAGS="$CFLAGS -Wpointer-arith"
+    fi
+
+    # The undocumented option -Wno-psabi suppresses the annoying
+    #   "the ABI of passing union with long double has changed in GCC 4.4"
+    # which is emitted in estream-printf.c but entirely irrelvant
+    # because that union is local to the file.
+    if test x"$_gcc_silent_wno" = xyes ; then
+       CFLAGS="$CFLAGS -Wno-psabi"
+    fi
+fi
+
 # For now we hardcode the use of version scripts.  It would be better
 # to write a test for this or even implement this within libtool.
 have_ld_version_script=no
@@ -224,21 +295,6 @@ AC_PROG_MAKE_SET
 
 # We need to compile and run a program on the build machine.
 AX_CC_FOR_BUILD
-
-if test "$GCC" = yes; then
-    CFLAGS="$CFLAGS -Wall -Wcast-align -Wshadow -Wstrict-prototypes"
-
-    AC_MSG_CHECKING([if gcc supports -Wpointer-arith])
-    _gcc_cflags_save=$CFLAGS
-    CFLAGS="-Wpointer-arith"
-    AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],_gcc_wopt=yes,_gcc_wopt=no)
-    AC_MSG_RESULT($_gcc_wopt)
-    CFLAGS=$_gcc_cflags_save;
-    if test x"$_gcc_wopt" = xyes ; then
-       CFLAGS="$CFLAGS -Wpointer-arith"
-    fi
-fi
-
 
 #
 # Options depending on the host OS.

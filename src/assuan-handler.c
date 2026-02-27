@@ -44,6 +44,7 @@ static int my_strcasecmp (const char *a, const char *b);
 static gpg_error_t
 dummy_handler (assuan_context_t ctx, char *line)
 {
+  (void)line;
   return
     PROCESS_DONE (ctx, set_error (ctx, GPG_ERR_ASSUAN_SERVER_FAULT,
 				  "no handler registered"));
@@ -57,6 +58,7 @@ static const char std_help_nop[] =
 static gpg_error_t
 std_handler_nop (assuan_context_t ctx, char *line)
 {
+  (void)line;
   return PROCESS_DONE (ctx, 0); /* okay */
 }
 
@@ -158,6 +160,7 @@ static const char std_help_auth[] =
 static gpg_error_t
 std_handler_auth (assuan_context_t ctx, char *line)
 {
+  (void)line;
   return PROCESS_DONE (ctx, set_error (ctx, GPG_ERR_NOT_IMPLEMENTED, NULL));
 }
 
@@ -254,6 +257,7 @@ static const char std_help_end[] =
 static gpg_error_t
 std_handler_end (assuan_context_t ctx, char *line)
 {
+  (void)line;
   return PROCESS_DONE (ctx, set_error (ctx, GPG_ERR_NOT_IMPLEMENTED, NULL));
 }
 
@@ -611,6 +615,8 @@ _assuan_register_std_commands (assuan_context_t ctx)
 static gpg_error_t
 handle_data_line (assuan_context_t ctx, char *line, int linelen)
 {
+  (void)line;
+  (void)linelen;
   return set_error (ctx, GPG_ERR_NOT_IMPLEMENTED, NULL);
 }
 
@@ -1006,6 +1012,7 @@ assuan_get_data_fp (assuan_context_t ctx)
   ctx->outbound.data.error = 0;
   return ctx->outbound.data.fp;
 #else
+  (void)ctx;
   gpg_err_set_errno (ENOSYS);
   return NULL;
 #endif

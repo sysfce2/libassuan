@@ -103,6 +103,8 @@ _assuan_debug_add (assuan_context_t ctx, void **line, const char *format, ...)
   char *result;
   int res;
 
+  (void)ctx;
+
   if (!*line)
     return;
 
@@ -129,6 +131,8 @@ _assuan_debug_add (assuan_context_t ctx, void **line, const char *format, ...)
 void
 _assuan_debug_end (assuan_context_t ctx, void **line, unsigned int cat)
 {
+  (void)cat;
+
   if (!*line)
     return;
 

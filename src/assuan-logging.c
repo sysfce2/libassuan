@@ -130,6 +130,8 @@ _assuan_log_handler (assuan_context_t ctx, void *hook, unsigned int cat,
   const char *prf;
   int saved_errno = errno;
 
+  (void)hook;
+
   /* For now.  */
   if (msg == NULL)
     return TEST_LOG_CAT (cat);

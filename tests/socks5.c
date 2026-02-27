@@ -207,7 +207,7 @@ main (int argc, char **argv)
     }
   else if (opt_byname)
     {
-      unsigned short port;
+      unsigned int port;
       char *cred;
 
       if (user || pass)

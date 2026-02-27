@@ -56,6 +56,8 @@ assuan_fdopen (int fd)
 void
 __assuan_usleep (assuan_context_t ctx, unsigned int usec)
 {
+  (void)ctx;
+
   if (!usec)
     return;
 
@@ -385,6 +387,10 @@ int
 __assuan_recvmsg (assuan_context_t ctx, assuan_fd_t fd, assuan_msghdr_t msg,
 		  int flags)
 {
+  (void)ctx;
+  (void)fd;
+  (void)msg;
+  (void)flags;
   gpg_err_set_errno (ENOSYS);
   return -1;
 }
@@ -396,6 +402,10 @@ int
 __assuan_sendmsg (assuan_context_t ctx, assuan_fd_t fd, assuan_msghdr_t msg,
 		  int flags)
 {
+  (void)ctx;
+  (void)fd;
+  (void)msg;
+  (void)flags;
   gpg_err_set_errno (ENOSYS);
   return -1;
 }
@@ -635,6 +645,11 @@ int
 __assuan_socketpair (assuan_context_t ctx, int namespace, int style,
 		     int protocol, assuan_fd_t filedes[2])
 {
+  (void)ctx;
+  (void)namespace;
+  (void)style;
+  (void)protocol;
+  (void)filedes;
   gpg_err_set_errno (ENOSYS);
   return -1;
 }

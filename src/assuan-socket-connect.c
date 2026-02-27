@@ -233,6 +233,8 @@ assuan_socket_connect (assuan_context_t ctx, const char *name,
   int af = AF_LOCAL;
   int pf = PF_LOCAL;
 
+  (void)server_pid;
+
   TRACE2 (ctx, ASSUAN_LOG_CTX, "assuan_socket_connect", ctx,
 	  "name=%s, flags=0x%x", name ? name : "(null)", flags);
 

@@ -130,9 +130,11 @@ _assuan_system_hooks_copy (assuan_system_hooks_t dst,
       dst->connect = src->connect;
     }
   if (src->version > 2)
-    /* FIXME.  Application uses newer version of the library.  What to
-       do?  */
-    ;
+    {
+      /* FIXME.  Application uses newer version of the library.  What to
+         do?  */
+      ;
+    }
 }
 
 

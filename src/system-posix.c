@@ -61,6 +61,8 @@ assuan_fdopen (int fd)
 void
 __assuan_usleep (assuan_context_t ctx, unsigned int usec)
 {
+  (void)ctx;
+
   if (! usec)
     return;
 
@@ -91,6 +93,8 @@ __assuan_usleep (assuan_context_t ctx, unsigned int usec)
 int
 __assuan_pipe (assuan_context_t ctx, assuan_fd_t fd[2], int inherit_idx)
 {
+  (void)ctx;
+  (void)inherit_idx;
   return pipe (fd);
 }
 
@@ -101,6 +105,7 @@ __assuan_pipe (assuan_context_t ctx, assuan_fd_t fd[2], int inherit_idx)
 int
 __assuan_close (assuan_context_t ctx, assuan_fd_t fd)
 {
+  (void)ctx;
   return close (fd);
 }
 
@@ -109,6 +114,7 @@ __assuan_close (assuan_context_t ctx, assuan_fd_t fd)
 ssize_t
 __assuan_read (assuan_context_t ctx, assuan_fd_t fd, void *buffer, size_t size)
 {
+  (void)ctx;
   return read (fd, buffer, size);
 }
 
@@ -118,6 +124,7 @@ ssize_t
 __assuan_write (assuan_context_t ctx, assuan_fd_t fd, const void *buffer,
 		size_t size)
 {
+  (void)ctx;
   return write (fd, buffer, size);
 }
 
@@ -128,6 +135,8 @@ __assuan_recvmsg (assuan_context_t ctx, assuan_fd_t fd, assuan_msghdr_t msg,
 		  int flags)
 {
   int ret;
+
+  (void)ctx;
 
   do
     ret = recvmsg (fd, msg, flags);
@@ -143,6 +152,8 @@ __assuan_sendmsg (assuan_context_t ctx, assuan_fd_t fd, assuan_msghdr_t msg,
 		  int flags)
 {
   int ret;
+
+  (void)ctx;
 
   do
     ret = sendmsg (fd, msg, flags);
@@ -275,6 +286,8 @@ __assuan_spawn (assuan_context_t ctx, assuan_pid_t *r_pid, const char *name,
 {
   int pid;
 
+  (void)flags;
+
   pid = fork ();
   if (pid < 0)
     return -1;
@@ -398,6 +411,8 @@ assuan_pid_t
 __assuan_waitpid (assuan_context_t ctx, assuan_pid_t pid, int nowait,
 		  int *status, int options)
 {
+  (void)ctx;
+
   if (nowait)
     return 0;
 
@@ -413,6 +428,7 @@ int
 __assuan_socketpair (assuan_context_t ctx, int namespace, int style,
 		     int protocol, assuan_fd_t filedes[2])
 {
+  (void)ctx;
   return socketpair (namespace, style, protocol, filedes);
 }
 
@@ -420,6 +436,7 @@ __assuan_socketpair (assuan_context_t ctx, int namespace, int style,
 int
 __assuan_socket (assuan_context_t ctx, int namespace, int style, int protocol)
 {
+  (void)ctx;
   return socket (namespace, style, protocol);
 }
 
@@ -428,6 +445,7 @@ int
 __assuan_connect (assuan_context_t ctx, int sock, struct sockaddr *addr,
 		  socklen_t length)
 {
+  (void)ctx;
   return connect (sock, addr, length);
 }
 

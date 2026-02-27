@@ -779,6 +779,8 @@ socks5_connect (assuan_context_t ctx, assuan_fd_t sock,
   fd_set fds;
   struct timeval tv = { TIMEOUT_NOT_WAITING_SOCKS5_FOREVER, 0 };
 
+  (void)length;
+
   addru.addr = addr;
 
   FD_ZERO (&fds);
@@ -1081,8 +1083,6 @@ _assuan_sock_accept (assuan_context_t ctx, assuan_fd_t sockfd,
 {
   assuan_fd_t res;
 
-  (void)ctx;
-
   _assuan_pre_syscall ();
 
 #ifdef HAVE_W32_SYSTEM
@@ -1090,6 +1090,7 @@ _assuan_sock_accept (assuan_context_t ctx, assuan_fd_t sockfd,
   if (res == SOCKET2HANDLE (INVALID_SOCKET))
     gpg_err_set_errno (_assuan_sock_wsa2errno (ctx, WSAGetLastError ()));
 #else
+  (void)ctx;
   res = accept (sockfd, addr, p_addrlen);
 #endif
 
@@ -1367,6 +1368,7 @@ _assuan_sock_bind (assuan_context_t ctx, assuan_fd_t sockfd,
     }
  leave:
 #else
+  (void)ctx;
   res = bind (sockfd, addr, addrlen);
 #endif
 
@@ -1441,6 +1443,7 @@ int
 _assuan_sock_get_nonce (assuan_context_t ctx, struct sockaddr *addr,
 			socklen_t addrlen, assuan_sock_nonce_t *nonce)
 {
+  (void)ctx;
 #ifdef HAVE_W32_SYSTEM
   if (addr->sa_family == AF_LOCAL || addr->sa_family == AF_UNIX)
     {
@@ -1525,6 +1528,7 @@ _assuan_sock_check_nonce (assuan_context_t ctx, assuan_fd_t fd,
     }
 
 #else
+  (void)ctx;
   (void)fd;
   (void)nonce;
 #endif

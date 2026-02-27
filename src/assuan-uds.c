@@ -237,6 +237,7 @@ uds_sendfd (assuan_context_t ctx, assuan_fd_t fd)
   else
     return 0;
 #else
+  (void)fd;
   return _assuan_error (ctx, GPG_ERR_NOT_IMPLEMENTED);
 #endif
 }
@@ -263,6 +264,7 @@ uds_receivefd (assuan_context_t ctx, assuan_fd_t *fd)
 
   return 0;
 #else
+  (void)fd;
   return _assuan_error (ctx, GPG_ERR_NOT_IMPLEMENTED);
 #endif
 }
