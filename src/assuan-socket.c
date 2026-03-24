@@ -662,7 +662,11 @@ _assuan_sock_get_flag (assuan_context_t ctx, assuan_fd_t sockfd,
           gpg_err_set_errno (EINVAL);
           return -1;
         }
-      if (li.l_onoff && li.l_linger >= 0)
+      if (li.l_onoff
+#if !defined(HAVE_W32_SYSTEM)
+          && li.l_linger >= 0
+#endif
+          )
         *r_value = li.l_linger;
       else
         *r_value = -1;
@@ -1445,6 +1449,7 @@ _assuan_sock_get_nonce (assuan_context_t ctx, struct sockaddr *addr,
 {
   (void)ctx;
 #ifdef HAVE_W32_SYSTEM
+  (void)addrlen;
   if (addr->sa_family == AF_LOCAL || addr->sa_family == AF_UNIX)
     {
       struct sockaddr_un *unaddr;

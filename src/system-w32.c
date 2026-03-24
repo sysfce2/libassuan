@@ -497,6 +497,8 @@ __assuan_spawn (assuan_context_t ctx, assuan_pid_t *r_pid, const char *name,
      value, change it, create process and restore it, is not thread
      safe.  */
 
+  (void)atfork;
+  (void)atforkvalue;
   /* Build the command line.  */
   if (build_w32_commandline (ctx, argv, &cmdline))
     return -1;

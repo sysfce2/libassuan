@@ -517,7 +517,18 @@ _assuan_socket (assuan_context_t ctx, int namespace, int style, int protocol)
     res = (ctx->system.socket) (ctx, namespace, style, protocol);
   else
     res = __assuan_socket (ctx, namespace, style, protocol);
+#if defined(HAVE_W32_SYSTEM)
+  if (res == ASSUAN_INVALID_FD)
+    _assuan_debug (_assuan_trace_context, _assuan_trace_level,
+                   "%s (%s=%p): error: %s\n",
+                   _assuan_trace_func, _assuan_trace_tagname,
+		   _assuan_trace_tag, strerror (errno));
+  else
+    (void)(TRACE_SUC1 ("result=%i", res));
+  return res;
+#else
   return TRACE_SYSRES (res);
+#endif
 }
 
 
