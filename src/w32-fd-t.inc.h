@@ -14,7 +14,7 @@
 ## Lesser General Public License for more details.
 ##
 ## You should have received a copy of the GNU Lesser General Public
-## License along with this program; if not, see <http://www.gnu.org/licenses/>.
+## License along with this program; if not, see <https://www.gnu.org/licenses/>.
 ## SPDX-License-Identifier: LGPL-2.1+
 ##
 ##
@@ -23,15 +23,10 @@
 
 /* Because we use system handles and not libc low level file
    descriptors on W32, we need to declare them as HANDLE (which
-   actually is a plain pointer).  This is required to eventually
-   support 64 bit Windows systems.  */
+   actually is a plain pointer).  */
 typedef void *assuan_fd_t;
-#define ASSUAN_INVALID_FD ((void*)(-1))
+#define ASSUAN_INVALID_FD ((void*)(intptr_t)(-1))
 #define ASSUAN_INVALID_PID ((pid_t) -1)
-#if GPGRT_HAVE_PRAGMA_GCC_PUSH
-# pragma GCC push_options
-# pragma GCC diagnostic ignored "-Wbad-function-cast"
-#endif
 static GPG_ERR_INLINE assuan_fd_t
 assuan_fd_from_posix_fd (int fd)
 {
@@ -40,8 +35,5 @@ assuan_fd_from_posix_fd (int fd)
   else
     return (assuan_fd_t) _get_osfhandle (fd);
 }
-#if GPGRT_HAVE_PRAGMA_GCC_PUSH
-# pragma GCC pop_options
-#endif
 
 ##EOF##
